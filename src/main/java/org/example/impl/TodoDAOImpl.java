@@ -118,4 +118,11 @@ public class TodoDAOImpl implements TodoDAO {
                 .getResultList();
                 return todos;
     }
+
+    public Todo getTodoById(Long todoId) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Todo todo = entityManager.find(Todo.class,todoId);
+        entityManager.close();
+        return todo;
+    }
 }

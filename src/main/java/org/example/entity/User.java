@@ -55,7 +55,6 @@ public class User {
         return "User{" +
                 "Id=" + Id +
                 ", userName='" + userName + '\'' +
-                ", todos=" + todos +
                 '}';
     }
 }

@@ -86,8 +86,7 @@ public class TodoInfo {
                 "Id=" + Id +
                 ", description='" + description + '\'' +
                 ", dateEcheance=" + dateEcheance +
-                ", priorite='" + priorite + '\'' +
-                ", todo=" + todo +
+                ", priorite=" + priorite +
                 '}';
     }
 }

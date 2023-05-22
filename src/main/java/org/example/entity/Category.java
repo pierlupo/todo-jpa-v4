@@ -15,10 +15,8 @@ public class Category {
 
     private String CategoryTitle;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "category_todo", joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "todo_id"))
-    private List<Todo> todos = new ArrayList<>();
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
+    private List<Todo> todos;
 
     public Category() {
     }
@@ -30,6 +28,11 @@ public class Category {
 
     public Category(String categoryTitle) {
         CategoryTitle = categoryTitle;
+    }
+
+    public Category(String categoryTitle, List<Todo> todos) {
+        CategoryTitle = categoryTitle;
+        this.todos = todos;
     }
 
     public Long getId() {

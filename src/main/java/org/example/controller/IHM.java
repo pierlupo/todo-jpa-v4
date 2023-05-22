@@ -73,14 +73,23 @@ public class IHM {
                 case "11":
                     deleteCategory();
                     break;
+                case "12":
+                    addCategoryToTodo();
+                    break;
+                case "13":
+                    deleteCategoryToTodo();
+                    break;
+                case "14":
+                    showAllTodosOfCategory();
+                    break;
                 case "0":
                     System.out.println("Bye bye");
-                    entityManagerFactory.close();
                     break;
                 default:
                     System.out.println("Invalid choice, try again please.");
             }
         }while (!choice.equals("0"));
+        entityManagerFactory.close();
     }
     private static void menu() {
         System.out.println("###################################");
@@ -100,6 +109,9 @@ public class IHM {
         System.out.println("9 - Change status of a todo");
         System.out.println("10 - Add a new category");
         System.out.println("11 - Delete a category");
+        System.out.println("12 - Add a todo to a category");
+        System.out.println("13 - Remove a todo from a category");
+        System.out.println("14 - Show all todos of a category");
         System.out.println("0 - Quit");
     }
     private static void addUser(){
@@ -129,7 +141,7 @@ public class IHM {
     private static void displayUsers() {
         List<User> users = userDAO.getAllUsers();
         if (users.isEmpty()) {
-            System.out.println("No Todos Found.");
+            System.out.println("No Users Found.");
         } else {
             System.out.println("### List of Users ###");
             for (User user : users) {
@@ -154,14 +166,52 @@ public class IHM {
     private static void deleteCategory(){
         System.out.println("Enter the ID of the category you want to delete : ");
         Long categoryId  = scanner.nextLong();
-        scanner.nextLine();
+        //scanner.nextLine();
         if (categoryDAO.deleteCategory(categoryId)){
             System.out.println("Category deleted");
         }else {
             System.out.println("Error while trying to delete a category");
         }
     }
+    private static void addCategoryToTodo(){
+        System.out.print("Enter the ID of the todo  : ");
+        Long todoId = scanner.nextLong();
+        scanner.nextLine(); // Consomme la nouvelle ligne
+        System.out.print("Enter the ID of the category  : ");
+        Long categoryId = scanner.nextLong();
+        scanner.nextLine(); // Consomme la nouvelle ligne
+        Category category = categoryDAO.getCategoryById(categoryId);
+        System.out.println(category.getCategoryTitle());
+        Todo todo = todoDAO.getTodoById(todoId);
+        System.out.println(todo.getTitle());
+        categoryDAO.addTodoToCategory(todo,category);
 
+    }
+
+    private static void deleteCategoryToTodo(){
+        System.out.print("Enter the ID of the todo  : ");
+        Long todoId = scanner.nextLong();
+        scanner.nextLine(); // Consomme la nouvelle ligne
+        System.out.print("Enter the ID of the category  : ");
+        Long categoryId = scanner.nextLong();
+        scanner.nextLine(); // Consomme la nouvelle ligne
+        Category category = categoryDAO.getCategoryById(categoryId);
+        Todo todo = todoDAO.getTodoById(todoId);
+        categoryDAO.removeTodoFromCategory(todo,category);
+    }
+
+    private static void showAllTodosOfCategory(){
+        System.out.println("Enter the ID of the category you want to display the todos :");
+        Long categoryId = scanner.nextLong();
+        String nameCategory = categoryDAO.getCategoryName(categoryId);
+        Category category = categoryDAO.getCategoryById(categoryId);
+        List<Todo> todos = categoryDAO.getTodosByCategory(category);
+        System.out.println("Name of the category : "+ nameCategory +" with the ID " + categoryId + ":");
+        for (Todo t : todos) {
+            System.out.println("- "+ t.getUser().getUserName()+ " " + t.getTitle()+ " "+ t.getTodoInfo().toString() + (t.isCompleted() ? " (completed)" : "(active)"));
+        }
+
+    }
     private static void displayUsersTodos() {
         System.out.println("Enter the ID of the user : ");
         Long userId  = scanner.nextLong();
@@ -169,7 +219,7 @@ public class IHM {
         List<Todo> todos = todoDAO.getTodoByUserId(userId);
         System.out.println("Todo(s) of the user with id : "+ userId + " : ");
         for (Todo t : todos){
-            System.out.println(t.getId() + ". " + t.getTitle() + " (" + (t.isCompleted() ? "Terminée" : "En cours") + ")");
+            System.out.println(" -"+ t.getId() + ". " + t.getUser() +" , "  + t.getTitle() + " (" + (t.isCompleted() ? "Terminée" : "En cours") + ")");
         }
 
     }
@@ -224,7 +274,7 @@ public class IHM {
             for (Todo todo : todos) {
                 System.out.println("############");
                 System.out.println(todo.getId() + ". " + todo.getTitle() + " (" + (todo.isCompleted() ? "Completed" : "Active") + ")");
-                System.out.println(todo.getTodoInfo().toString());
+//                System.out.println(todo.getTodoInfo().toString());
                 System.out.println("############");
             }
         }

@@ -24,8 +24,12 @@ public class Todo {
     @JoinColumn(name = "id_user")
     private User user;
 
-    @ManyToMany(mappedBy = "todo")
-    private List<Category> categories = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+
+    @JoinTable(name="todo_category",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "todo_id"))
+    private List<Category> categories;
 
     public Todo() {
     }
@@ -98,7 +102,6 @@ public class Todo {
                 "Id=" + Id +
                 ", title='" + title + '\'' +
                 ", completed=" + completed +
-                ", todoInfo=" + todoInfo +
                 ", user=" + user +
                 ", categories=" + categories +
                 '}';
